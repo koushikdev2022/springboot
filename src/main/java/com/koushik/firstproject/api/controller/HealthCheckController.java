@@ -7,12 +7,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 public class HealthCheckController {
+   
     @GetMapping("/health-check")
-    public String getMethodName(@RequestParam String param) {
-        return new String();
+    public String healthCheck(){
+        return "ok";
     }
-    
-        public String healthCheck(){
-            return "ok";
-        }
 }
