@@ -1,0 +1,7 @@
+@springBootApplication this works for[@configuration,@EnableAutoConfiguration,@ComponentScan]
+
+@ComponentScan - found base pacakge and scan for @component and add to ioc container
+
+@autoware ask bean or object from ioc dendency injection
+
+@bean anotation we also can create bean but it apply on function not on class
