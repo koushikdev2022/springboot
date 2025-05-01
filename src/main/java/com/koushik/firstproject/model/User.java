@@ -1,21 +1,14 @@
 package com.koushik.firstproject.model;
 
-import java.util.UUID;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.PrePersist;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "users")
 public class User {
 
     @Id
-    @GeneratedValue // Do not specify GenerationType since we will manually set the UUID
-    private UUID id; // UUID for the primary key
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-increment
+    private Long id;
 
     @Column(nullable = false, unique = true)
     private String email;
@@ -43,21 +36,13 @@ public class User {
         this.mobile = mobile;
     }
 
-    // Method to generate UUID before persisting
-    @PrePersist
-    public void prePersist() {
-        if (this.id == null) {
-            this.id = UUID.randomUUID(); // Generate UUID if id is not already set
-        }
-    }
-
     // Getters and Setters
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
