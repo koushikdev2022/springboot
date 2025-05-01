@@ -1,13 +1,18 @@
 package com.koushik.firstproject.model;
 
-import javax.persistence.*;
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "users")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-increment
+    @GeneratedValue(strategy = GenerationType.IDENTITY) 
     private Long id;
 
     @Column(nullable = false, unique = true)
@@ -24,16 +29,28 @@ public class User {
 
     @Column(nullable = false, unique = true)
     private String mobile;
-
+    @Column(nullable = true, unique = true)
+    private String koushik;
+    @Column(nullable = true, unique = true)
+    private String date;
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+    
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
     // Constructors
     public User() {}
 
-    public User(String email, String username, String password, String status, String mobile) {
+    public User(String email, String username, String password, String status, String mobile,String date,String koushik) {
         this.email = email;
         this.username = username;
         this.password = password;
         this.status = status;
         this.mobile = mobile;
+        this.date=date;
+        this.koushik = koushik;
     }
 
     // Getters and Setters
@@ -46,6 +63,13 @@ public class User {
         this.id = id;
     }
 
+    public String getKoushik() {
+        return koushik;
+    }
+
+    public void setKoushik(String koushik) {
+        this.koushik = koushik;
+    }
     public String getEmail() {
         return email;
     }
@@ -53,7 +77,12 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
-
+    public void setDate(String date) {
+        this.date = date;
+    }
+    public String getDate() {
+        return date;
+    }
     public String getUsername() {
         return username;
     }
@@ -84,5 +113,12 @@ public class User {
 
     public void setMobile(String mobile) {
         this.mobile = mobile;
+    }
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 }
