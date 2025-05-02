@@ -32,6 +32,8 @@ public class User {
     @Column(nullable = true, unique = true)
     private String koushik;
     @Column(nullable = true, unique = true)
+    private String otp;
+    @Column(nullable = true, unique = false)
     private String date;
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -43,7 +45,7 @@ public class User {
     // Constructors
     public User() {}
 
-    public User(String email, String username, String password, String status, String mobile,String date,String koushik) {
+    public User(String email, String username, String password, String status, String mobile,String date,String koushik, String otp) {
         this.email = email;
         this.username = username;
         this.password = password;
@@ -51,6 +53,7 @@ public class User {
         this.mobile = mobile;
         this.date=date;
         this.koushik = koushik;
+        this.otp = otp;
     }
 
     // Getters and Setters
@@ -69,6 +72,14 @@ public class User {
 
     public void setKoushik(String koushik) {
         this.koushik = koushik;
+    }
+
+    public String getOtp() {
+        return otp;
+    }
+
+    public void setOtp(String otp) {
+        this.otp = otp;
     }
     public String getEmail() {
         return email;
