@@ -36,7 +36,7 @@ public class JournalEntryController {
     public ResponseEntity<Object>  showMap() {
         List<JournalEntry> journalEntry = journalEntryService.getAll();
         if (journalEntry.isEmpty()) {
-            return ResponseEntity.status(400).body(Map.of(
+            return ResponseEntity.status(200).body(Map.of(
                 "status", true,
                 "message", "Journal entry fetched successfully",
                 "status_code", 200,
