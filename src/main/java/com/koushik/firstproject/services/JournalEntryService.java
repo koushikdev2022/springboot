@@ -31,5 +31,44 @@ public class JournalEntryService {
         }
         return false; // Not found
     }
+    // public Optional<JournalEntry> updateById(ObjectId id, JournalEntry journalEntry) {
+    //     Optional<JournalEntry> optionalEntry = journalEntryRepo.findById(id);
+    
+    //     if (optionalEntry.isPresent()) {
+    //         JournalEntry entry = optionalEntry.get();
+    
+    //         if (journalEntry.getTitle() != null) {
+    //             entry.setTitle(journalEntry.getTitle());
+    //         }
+    //         if (journalEntry.getContent() != null) {
+    //             entry.setContent(journalEntry.getContent());
+    //         }
+    
+    //         journalEntryRepo.save(entry);
+    //         return Optional.of(entry);
+    //     } else {
+    //         return Optional.empty();
+    //     }
+    // }
+    public Optional<JournalEntry> updateById(ObjectId id, Optional<JournalEntry> journalEntryOpt) {
+        Optional<JournalEntry> optionalEntry = journalEntryRepo.findById(id);
+    
+        if (optionalEntry.isPresent() && journalEntryOpt.isPresent()) {
+            JournalEntry entry = optionalEntry.get();
+            JournalEntry updatedData = journalEntryOpt.get();
+    
+            if (updatedData.getTitle() != null) {
+                entry.setTitle(updatedData.getTitle());
+            }
+            if (updatedData.getContent() != null) {
+                entry.setContent(updatedData.getContent());
+            }
+    
+            journalEntryRepo.save(entry);
+            return Optional.of(entry);
+        } else {
+            return Optional.empty();
+        }
+    }
     
 }

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -95,5 +96,44 @@ public class JournalEntryController {
             ));
         }
     }
+    @PutMapping("/update-journal/{id}")
+    public ResponseEntity<?> updateJournal(@PathVariable ObjectId id, @RequestBody Optional<JournalEntry> journalEntry) {
+        Optional<JournalEntry> updated = journalEntryService.updateById(id, journalEntry);
+
+        if (updated.isPresent()) {
+            return ResponseEntity.ok(Map.of(
+                "status", true,
+                "message", "Journal entry updated successfully",
+                "status_code", 200,
+                "data", updated.get()
+            ));
+        } else {
+            return ResponseEntity.status(404).body(Map.of(
+                "status", false,
+                "message", "Journal entry not found",
+                "status_code", 404
+            ));
+        }
+    }
+    // @PutMapping("/journal/{id}")
+    // public ResponseEntity<?> updateJournal(@PathVariable ObjectId id, @RequestBody JournalEntryUpdateDTO dto) {
+    //     Optional<JournalEntry> updated = journalEntryService.updateById(id, dto);
+    
+    //     if (updated.isPresent()) {
+    //         return ResponseEntity.ok(Map.of(
+    //             "status", true,
+    //             "message", "Journal entry updated successfully",
+    //             "status_code", 200,
+    //             "data", updated.get()
+    //         ));
+    //     } else {
+    //         return ResponseEntity.status(404).body(Map.of(
+    //             "status", false,
+    //             "message", "Journal entry not found",
+    //             "status_code", 404
+    //         ));
+    //     }
+    // }
+    
     
 }
