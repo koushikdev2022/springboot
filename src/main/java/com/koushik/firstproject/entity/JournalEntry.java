@@ -3,6 +3,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.bson.types.ObjectId;
 
+
 @Document(collection = "journal_entries")
 public class JournalEntry {
     @Id

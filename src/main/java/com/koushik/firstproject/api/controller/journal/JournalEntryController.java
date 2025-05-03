@@ -35,17 +35,17 @@ public class JournalEntryController {
     public ResponseEntity<Object>  showMap() {
         List<JournalEntry> journalEntry = journalEntryService.getAll();
         if (journalEntry.isEmpty()) {
-            return ResponseEntity.ok(Map.of(
+            return ResponseEntity.status(400).body(Map.of(
                 "status", true,
                 "message", "Journal entry fetched successfully",
                 "status_code", 200,
                 "data", journalEntry
             ));
         } else {
-            return ResponseEntity.ok(Map.of(
+            return ResponseEntity.status(400).body(Map.of(
                 "status", false,
                 "message", "Journal entry not found",
-                "status_code", 404
+                "status_code", 400
             ));
         }
     }
