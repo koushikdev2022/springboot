@@ -1,11 +1,9 @@
 package com.koushik.firstproject.api.controller.user;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.koushik.firstproject.config.appLogger.AppLogger;
 import com.koushik.firstproject.entity.UserEntry;
 import com.koushik.firstproject.services.UserEntryService;
 
@@ -78,13 +77,18 @@ public class UserEntryController {
             public ResponseEntity<Object> useNameUser(@PathVariable String username) {
                 try {
                     UserEntry list = userEntryService.userListSingle(username);
-                    // if (list == null) {
-                    //     return ResponseEntity.status(400).body(Map.of(
-                    //         "status", false,
-                    //         "message", "User not found",
-                    //         "status_code", 400
-                    //     ));
-                    // }
+                    if (list == null) {
+                        return ResponseEntity.status(400).body(Map.of(
+                            "status", false,
+                            "message", "User not found",
+                            "status_code", 400
+                        ));
+                    }
+                    // AppLogger.info(getClass(), "Name: {}", list);
+                    // AppLogger.debug(getClass(), "Debug info: {}", list);
+                    // AppLogger.error(getClass(), "Error occurred: {}", list);
+                    AppLogger.dd(list);
+
                     return ResponseEntity.status(200).body(Map.of(
                         "status", true,
                         "message", "Users found successfully",
