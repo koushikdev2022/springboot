@@ -16,7 +16,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEntry user = userEntryService.userListSingle(username);
-
+        String[] roles = user.getRoles() != null ? user.getRoles().toArray(new String[0]) : new String[]{"USER"};
         if (user == null) {
             throw new UsernameNotFoundException("User not found: " + username);
         }
@@ -24,7 +24,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getUserName())
                 .password(user.getPassword())
-                .roles(user.getRoles().toArray(new String[0]))
+                .roles(roles)
                 .build();
     }
 }
