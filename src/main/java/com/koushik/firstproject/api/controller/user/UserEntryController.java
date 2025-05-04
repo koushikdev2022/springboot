@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -72,4 +74,15 @@ public class UserEntryController {
                 ));
             }
         }
+        @GetMapping("/list-user/{username}")
+        public ResponseEntity<Object> useNameUser(@PathVariable String username) {
+            UserEntry list = userEntryService.userListSingle(username);
+            return ResponseEntity.status(200).body(Map.of(
+                "status", true,
+                "message", "Users found successfully",
+                "status_code", 200,
+                "data", list
+            ));
+        }
+           
 }

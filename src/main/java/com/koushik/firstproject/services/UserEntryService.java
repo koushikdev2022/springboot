@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import com.koushik.firstproject.entity.UserEntry;
 import com.koushik.firstproject.repositary.UserEntryRepo;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.data.mongodb.repository.Query;
+
 
 @Service
 public class UserEntryService {
@@ -25,8 +27,8 @@ public class UserEntryService {
     public List<UserEntry> userList() {
         return userEntryRepo.findAll();
     }
-
-    public UserEntry userListSingle(String username) {
-        return userEntryRepo.findByUserName(username);
+    public UserEntry userListSingle(String userName){
+        return userEntryRepo.findByUserName(userName);
     }
+ 
 }
