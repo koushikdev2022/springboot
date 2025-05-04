@@ -74,15 +74,36 @@ public class UserEntryController {
                 ));
             }
         }
-        @GetMapping("/list-user/{username}")
-        public ResponseEntity<Object> useNameUser(@PathVariable String username) {
-            UserEntry list = userEntryService.userListSingle(username);
-            return ResponseEntity.status(200).body(Map.of(
-                "status", true,
-                "message", "Users found successfully",
-                "status_code", 200,
-                "data", list
-            ));
-        }
+            @GetMapping("/list-user/{username}")
+            public ResponseEntity<Object> useNameUser(@PathVariable String username) {
+                try {
+                    UserEntry list = userEntryService.userListSingle(username);
+                    // if (list == null) {
+                    //     return ResponseEntity.status(400).body(Map.of(
+                    //         "status", false,
+                    //         "message", "User not found",
+                    //         "status_code", 400
+                    //     ));
+                    // }
+                    return ResponseEntity.status(200).body(Map.of(
+                        "status", true,
+                        "message", "Users found successfully",
+                        "status_code", 200,
+                        "data", list
+                    ));
+                } catch (Exception e) {
+                    // Logs the error for debugging (optional)
+                    e.printStackTrace();
+            
+                    return ResponseEntity.status(500).body(Map.of(
+                        "status", false,
+                        "message", "An unexpected error occurred",
+                        "status_code", 500,
+                        "error", e.getMessage()
+                    ));
+                }
+            }
+            
+            
            
 }
