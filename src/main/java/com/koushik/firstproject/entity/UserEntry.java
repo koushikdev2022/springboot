@@ -26,7 +26,7 @@ public class UserEntry {
     @Indexed(unique = true)
     @NonNull
     private String email;
-
+    private List<String> roles;
     @DBRef
     private List<JournalEntry> journalEntry = new ArrayList<>();
 }

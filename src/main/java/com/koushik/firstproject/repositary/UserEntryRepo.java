@@ -8,5 +8,5 @@ import com.koushik.firstproject.entity.JournalEntry;
 import com.koushik.firstproject.entity.UserEntry;
 
 public interface UserEntryRepo extends MongoRepository<UserEntry, ObjectId>{
-
+    UserEntry findByUserName(String userName);
 }
