@@ -21,7 +21,10 @@ private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
         http
             .csrf(csrf -> csrf.disable()) // Disable CSRF if it's not needed for your use case
             .authorizeRequests(auth -> auth
-                .requestMatchers("/health-check/**", "/user/**").permitAll() // Allow unauthenticated access to these paths
+                .requestMatchers("/health-check/**", "/user/**").permitAll() 
+                // .requestMatchers("/admin/**").hasRole("ADMIN")     // for role 1
+                // .requestMatchers("/user/**").hasRole("USER")       // for role 2
+                // .requestMatchers("/manager/**").hasRole("MANAGER")// Allow unauthenticated access to these paths
                 .anyRequest().authenticated() // Secure other requests
             )
             .exceptionHandling(exception -> exception
