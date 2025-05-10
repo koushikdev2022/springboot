@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.core.Authentication;
 
 import com.koushik.firstproject.config.appLogger.AppLogger;
+import com.koushik.firstproject.dto.LoginDTO;
 import com.koushik.firstproject.entity.UserEntry;
 import com.koushik.firstproject.services.UserEntryService;
 import com.koushik.firstproject.utill.JwtUtill;
@@ -121,17 +122,17 @@ public class UserEntryController {
             }
             
             @PostMapping("/login")
-            public ResponseEntity<Object> login(@RequestBody UserEntry userEntry){
+            public ResponseEntity<Object> login(@RequestBody LoginDTO loginDto){
                 try{
-                    AppLogger.dd(userEntry.getUserName());
+                    
                     Authentication authentication = authenticationManager.authenticate(
                         new UsernamePasswordAuthenticationToken(
-                            userEntry.getUserName(),
-                            userEntry.getPassword()
+                            loginDto.getUserName(),
+                            loginDto.getPassword()
                         )
                     );
                    
-                    UserEntry user = userEntryService.userListSingle(userEntry.getUserName());
+                    UserEntry user = userEntryService.userListSingle(loginDto.getUserName());
                     String jwt = jwtUtill.generateToken(user);
                
                     return ResponseEntity.status(200).body(Map.of(
