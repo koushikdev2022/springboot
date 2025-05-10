@@ -6,22 +6,34 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authorization.AuthenticatedAuthorizationManager;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
 
 import com.koushik.firstproject.config.appLogger.AppLogger;
 import com.koushik.firstproject.entity.UserEntry;
 import com.koushik.firstproject.services.UserEntryService;
+import com.koushik.firstproject.utill.JwtUtill;
 
 @RestController
 @RequestMapping("user")
 public class UserEntryController {
         @Autowired
         private UserEntryService userEntryService;
+        @Autowired
+        private AuthenticationManager authenticationManager;
+        @Autowired
+        private JwtUtill jwtUtill;
+
+       
+
         @PostMapping("create-user")
         public ResponseEntity<Object> createUser(@RequestBody Optional<UserEntry> userOptional){
             if(userOptional.isPresent()){
@@ -108,6 +120,37 @@ public class UserEntryController {
                 }
             }
             
+            @PostMapping("/login")
+            public ResponseEntity<Object> login(@RequestBody UserEntry userEntry){
+                try{
+                    AppLogger.dd(userEntry.getUserName());
+                    Authentication authentication = authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(
+                            userEntry.getUserName(),
+                            userEntry.getPassword()
+                        )
+                    );
+                   
+                    UserEntry user = userEntryService.userListSingle(userEntry.getUserName());
+                    String jwt = jwtUtill.generateToken(user);
+               
+                    return ResponseEntity.status(200).body(Map.of(
+                        "status", true,
+                        "message", "jwt token generated",
+                        "status_code", 200,
+                        "jwt", jwt
+                    ));
+                }catch (Exception e){
+                    return ResponseEntity.status(400).body(Map.of(
+                        "status", false,
+                        "message", "An unexpected error occurred",
+                        "status_code", 400,
+                        "error", e.getMessage()
+                    ));
+                }
+             
+
+            }
             
            
 }
