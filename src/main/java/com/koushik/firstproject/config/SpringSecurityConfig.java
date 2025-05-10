@@ -10,12 +10,16 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.koushik.firstproject.exception.CustomAuthenticationEntryPoint;
+import com.koushik.firstproject.filter.JwtFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SpringSecurityConfig {
+    @Autowired
+    private JwtFilter jwtFilter;
     @Autowired
 private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     @Bean
@@ -33,8 +37,8 @@ private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
             .authenticationEntryPoint(customAuthenticationEntryPoint)
         )
             .formLogin(form -> form.permitAll()) // Enable form login and allow access to login page
-            .httpBasic(); // Enable HTTP Basic authentication
-
+            // .httpBasic(); // Enable HTTP Basic authentication
+          .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build(); // Build the SecurityFilterChain object
     }
 
