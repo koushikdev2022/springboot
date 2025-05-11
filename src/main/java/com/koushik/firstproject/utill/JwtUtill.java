@@ -141,6 +141,21 @@ public class JwtUtill {
             throw new RuntimeException("Failed to extract user ID from token", e);
         }
     }
+
+    public Map<String, Object>  getUserData(String token) {
+        try {
+            Claims claims = extractAllClaims(token);
+            Map<String, Object> userClaim = (Map<String, Object>) claims.get("user");
+            
+            if (userClaim == null) {
+                throw new RuntimeException("User claim not found in token");
+            }
+            return userClaim;
+        } catch (Exception e) {
+            System.out.println("Error extracting user ID from token: " + e.getMessage());
+            throw new RuntimeException("Failed to extract user ID from token", e);
+        }
+    }
     
     /**
      * Extract user email from token

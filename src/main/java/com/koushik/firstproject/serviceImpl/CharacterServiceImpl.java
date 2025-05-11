@@ -20,6 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 import java.util.Random;
 
 @Service
@@ -40,11 +41,15 @@ public class CharacterServiceImpl implements CharacterService {
             if (token == null) {
                 throw new RuntimeException("JWT token not found in request");
             }
+            Map<String, Object>  details = jwtUtill.getUserData(token);
             // String userId = jwtUtill.extractUserId(token).toLong();
             Long userId = Long.parseLong(jwtUtill.extractUserId(token));
 
-
-            System.out.println("userDetails: " + userId);
+            String userName = (String) details.get("userName");
+            String email = (String) details.get("email");
+            Object roles = details.get("roles"); // may be null
+            Object journalEntry = details.get("journalEntry"); 
+            System.out.println("userName: " + userName);
             // String userId = userDetails.getId().toString(); 
             Random random = new Random();
             int randomNumber = 1000 + random.nextInt(9000);  // Generates a number between 1000 and 9999
