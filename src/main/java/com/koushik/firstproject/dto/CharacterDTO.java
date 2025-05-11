@@ -7,33 +7,20 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class CharacterDTO {
 
-    private Long id;
-    private String responseDerective;
-    private String keyMemory;
-    private String exampleMessage;
-    private String videoUrl;
-    private Long userId;
-    private String characterUniqeId;
+    @NotBlank(message = "Character name is required")
     private String characterName;
-    private Date dob;
-    private String gender;
-    private String avatar;
-    private String backgroundStory;
-    private String characterGreeting;
-    private Integer parentId;
-    private Integer isActive;
-    private Integer isPublic;
-    private Integer isPublish;
-    private Integer type;
-    private Integer isCompleted;
-    private Integer isDeleted;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-}
 
+    @NotBlank(message = "Gender is required")
+    private String gender;
+
+    @NotBlank(message = "Background story is required")
+    private String backgroundStory;
+
+}

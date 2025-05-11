@@ -14,13 +14,15 @@ import com.koushik.firstproject.dto.CharacterDTO;
 import com.koushik.firstproject.serviceImpl.CharacterServiceImpl;
 import com.koushik.firstproject.services.CharacterService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/characters")
 public class CharacterController {
        @Autowired
        private CharacterServiceImpl characterServiceImpl;
        @PostMapping("/add")
-       public ResponseEntity<?> addCharacter(@RequestBody CharacterDTO characterDTO) {
+       public ResponseEntity<?> addCharacter(@Valid @RequestBody CharacterDTO characterDTO) {
             Character savedCharacter = characterServiceImpl.addCharacter(characterDTO);
             // return ResponseEntity.ok(savedCharacter);
             return ResponseEntity.status(201).body(Map.of(
