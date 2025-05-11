@@ -13,13 +13,14 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.koushik.firstproject.exception.CustomAuthenticationEntryPoint;
-import com.koushik.firstproject.filter.JwtFilter;
+import com.koushik.firstproject.filter.JwtAuthenticationFilter;
+// import com.koushik.firstproject.filter.JwtFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SpringSecurityConfig {
     @Autowired
-    private JwtFilter jwtFilter;
+    private JwtAuthenticationFilter jwtFilter;
     @Autowired
 private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     @Bean

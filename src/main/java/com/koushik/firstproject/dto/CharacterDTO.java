@@ -18,7 +18,7 @@ public class CharacterDTO {
     private String keyMemory;
     private String exampleMessage;
     private String videoUrl;
-    private String userId;
+    private Long userId;
     private String characterUniqeId;
     private String characterName;
     private Date dob;
