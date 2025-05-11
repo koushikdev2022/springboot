@@ -72,8 +72,10 @@
 
 package com.koushik.firstproject.exception;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -81,6 +83,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 @RestControllerAdvice
@@ -91,10 +94,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<?> handleAuthenticationException(AuthenticationException ex) {
         if (ex == null) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
+            return ResponseEntity.status(400).body(Map.of(
                 "status", false,
                 "message", "Unknown Authentication Error",
-                "status_code", 500
+                "status_code", 400
             ));
         }
         
@@ -117,14 +120,31 @@ public class GlobalExceptionHandler {
     
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
-    
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, List<String>> errors = new HashMap<>();
+        ex.getBindingResult().getFieldErrors().forEach(error -> {
+            errors.computeIfAbsent(error.getField(), key -> new ArrayList<>()).add(error.getDefaultMessage());
+        });
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", false);
+        response.put("message", "Validation failed");
+        response.put("status_code", 422);
+        response.put("errors", errors);
+        response.put("location", extractErrorLocation(ex));
+
+        return ResponseEntity.status(422).body(response);
+    }
+
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleAllExceptions(Exception ex) {
         if (ex == null) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
+            return ResponseEntity.status(400).body(Map.of(
                 "status", false,
                 "message", "Unknown Server Error",
-                "status_code", 500
+                "status_code", 400
             ));
         }
         
@@ -141,11 +161,11 @@ public class GlobalExceptionHandler {
         Map<String, Object> response = new HashMap<>();
         response.put("status", false);
         response.put("message", "Something went wrong");
-        response.put("status_code", 500);
+        response.put("status_code", 400);
         response.put("error", errorMessage);
         response.put("location", errorLocation);
         
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        return ResponseEntity.status(400).body(response);
     }
     
     /**
@@ -166,11 +186,11 @@ public class GlobalExceptionHandler {
         Map<String, Object> response = new HashMap<>();
         response.put("status", false);
         response.put("message", "Critical system error");
-        response.put("status_code", 500);
+        response.put("status_code", 400);
         response.put("error", errorMessage);
         response.put("location", errorLocation);
         
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        return ResponseEntity.status(400).body(response);
     }
     
     /**
