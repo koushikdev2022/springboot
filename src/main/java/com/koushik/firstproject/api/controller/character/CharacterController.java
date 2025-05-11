@@ -1,0 +1,33 @@
+package com.koushik.firstproject.api.controller.character;
+
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import  com.koushik.firstproject.model.Character;
+
+import com.koushik.firstproject.dto.CharacterDTO;
+import com.koushik.firstproject.serviceImpl.CharacterServiceImpl;
+import com.koushik.firstproject.services.CharacterService;
+
+@RestController
+@RequestMapping("/api/characters")
+public class CharacterController {
+       @Autowired
+       private CharacterServiceImpl characterServiceImpl;
+       @PostMapping("/add")
+       public ResponseEntity<?> addCharacter(@RequestBody CharacterDTO characterDTO) {
+            Character savedCharacter = characterServiceImpl.addCharacter(characterDTO);
+            // return ResponseEntity.ok(savedCharacter);
+            return ResponseEntity.status(201).body(Map.of(
+                "status", true,
+                "message", "character insert successfully",
+                "status_code", 201,
+                "data", savedCharacter
+            ));
+       }
+}
