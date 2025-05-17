@@ -9,6 +9,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import com.koushik.firstproject.model.Character;
 import com.koushik.firstproject.config.appLogger.AppLogger;
 import com.koushik.firstproject.dto.CharacterDTO;
+import com.koushik.firstproject.dto.CharacterImageDTO;
 import com.koushik.firstproject.entity.UserEntry;
 import com.koushik.firstproject.repositary.CharacterRepo;
 import com.koushik.firstproject.services.CharacterService;
@@ -83,6 +84,17 @@ public class CharacterServiceImpl implements CharacterService {
             character.setType(dto.getType());
             character.setResponseDerective(dto.getResponseDerective());
         
+            return characterRepo.save(character);
+        }
+        @Override
+        public Character imageAddCharacter(Long id, CharacterImageDTO imgdto) {
+            
+            Character character = characterRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Character not found with id: " + id));
+                
+
+            character.setAvatar(imgdto.getAvatar());
+           
             return characterRepo.save(character);
         }
 }

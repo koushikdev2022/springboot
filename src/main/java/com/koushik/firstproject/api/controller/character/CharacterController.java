@@ -5,6 +5,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import  com.koushik.firstproject.model.Character;
 
 import com.koushik.firstproject.dto.CharacterDTO;
+import com.koushik.firstproject.dto.CharacterImageDTO;
 import com.koushik.firstproject.dto.CharacterSecondDto;
 import com.koushik.firstproject.serviceImpl.CharacterServiceImpl;
 import com.koushik.firstproject.services.CharacterService;
@@ -67,22 +71,39 @@ public class CharacterController {
                 // Create user-specific upload directory
                 String projectRoot = new File("").getAbsolutePath(); // Points to your project root
 
-                // Define target directory: [project_root]/public/upload/{user_id}/
+                
+                // Define upload directory
                 String userUploadDirPath = projectRoot + "/public/upload/" + id + "/";
                 File userUploadDir = new File(userUploadDirPath);
                 if (!userUploadDir.exists()) {
-                    userUploadDir.mkdirs(); // Create folders if they don't exist
+                    userUploadDir.mkdirs();
                 }
 
-                // Save the uploaded file
-                String filePath = userUploadDirPath + file.getOriginalFilename();
+                // Get original file name and extension
+                String originalFilename = file.getOriginalFilename();
+                String fileExtension = "";
+                if (originalFilename != null && originalFilename.contains(".")) {
+                    fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
+                    originalFilename = originalFilename.substring(0, originalFilename.lastIndexOf(".")); // Remove extension
+                }
+
+                // Create a timestamp
+                String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
+
+                // Final file name: originalName_yyyyMMdd_HHmmss.extension
+                String newFileName = originalFilename + "_" + timestamp + fileExtension;
+                CharacterImageDTO characterDto = new CharacterImageDTO();
+                // Save the file
+                String filePath = userUploadDirPath + newFileName;
                 file.transferTo(new File(filePath));
-    
+                characterDto.setAvatar("/public/upload/" + id + "/" + newFileName); // Relative path or full URL
+                
+                Character seconadAddCharacter = characterServiceImpl.imageAddCharacter(id,characterDto);
                 return ResponseEntity.status(201).body(Map.of(
                     "status", true,
                     "message", "character insert successfully",
-                    "status_code", 201
-                   
+                    "status_code", 201,
+                    "seconadAddCharacter",seconadAddCharacter
                   ));
             } catch (IOException e) {
                 return ResponseEntity.status(500).body("Upload failed: " + e.getMessage());
