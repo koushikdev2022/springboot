@@ -18,10 +18,13 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Random;
+
+import com.koushik.firstproject.dto.CharacterSecondDto;
 
 @Service
 public class CharacterServiceImpl implements CharacterService {
@@ -66,6 +69,20 @@ public class CharacterServiceImpl implements CharacterService {
             character.setBackgroundStory(dto.getBackgroundStory());
             character.setUserId(userId);
             character.setCharacterUniqeId(formattedDateTime);
+            return characterRepo.save(character);
+        }
+        @Override
+        public Character secondAddCharacter(Long id, CharacterSecondDto dto) {
+            
+            Character character = characterRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Character not found with id: " + id));
+                
+
+            character.setExampleMessage(dto.getExampleMessage());
+            character.setKeyMemory(dto.getKeyMemory());
+            character.setType(dto.getType());
+            character.setResponseDerective(dto.getResponseDerective());
+        
             return characterRepo.save(character);
         }
 }
