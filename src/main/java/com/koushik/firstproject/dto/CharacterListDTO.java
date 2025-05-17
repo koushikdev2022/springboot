@@ -32,4 +32,5 @@ public class CharacterListDTO {
     private Integer isDeleted;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+  
 }

@@ -10,11 +10,12 @@ import com.koushik.firstproject.model.Character;
 import com.koushik.firstproject.config.appLogger.AppLogger;
 import com.koushik.firstproject.dto.CharacterDTO;
 import com.koushik.firstproject.dto.CharacterImageDTO;
+import com.koushik.firstproject.dto.CharacterListDTO;
 import com.koushik.firstproject.entity.UserEntry;
 import com.koushik.firstproject.repositary.CharacterRepo;
 import com.koushik.firstproject.services.CharacterService;
 import com.koushik.firstproject.utill.JwtUtill;
-
+import org.springframework.beans.factory.annotation.Value;
 import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.security.core.Authentication;
@@ -34,6 +35,8 @@ public class CharacterServiceImpl implements CharacterService {
         @Autowired
         private JwtUtill jwtUtill;
         private HttpServletRequest request;
+        @Value("${app.base-url}")
+        private String baseUrl;
         @Override
         public Character addCharacter(CharacterDTO dto) {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -97,4 +100,38 @@ public class CharacterServiceImpl implements CharacterService {
            
             return characterRepo.save(character);
         }
+        @Override
+        public CharacterListDTO listCharacter(Long id) {
+            Character character = characterRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Character not found with id: " + id));
+
+            // Build DTO
+            CharacterListDTO dto = CharacterListDTO.builder()
+                .id(character.getId())
+                .responseDerective(character.getResponseDerective())
+                .keyMemory(character.getKeyMemory())
+                .exampleMessage(character.getExampleMessage())
+                .videoUrl(character.getVideoUrl())
+                .userId(character.getUserId())
+                .characterUniqeId(character.getCharacterUniqeId())
+                .characterName(character.getCharacterName())
+                .dob(character.getDob())
+                .gender(character.getGender())
+                .avatar(baseUrl + character.getAvatar()) // prefix with base URL
+                .backgroundStory(character.getBackgroundStory())
+                .characterGreeting(character.getCharacterGreeting())
+                .parentId(character.getParentId())
+                .isActive(character.getIsActive())
+                .isPublic(character.getIsPublic())
+                .isPublish(character.getIsPublish())
+                .type(character.getType())
+                .isCompleted(character.getIsCompleted())
+                .isDeleted(character.getIsDeleted())
+                .createdAt(character.getCreatedAt())
+                .updatedAt(character.getUpdatedAt())
+                .build();
+
+            return dto; // ✅ Correct return
+        }
+
 }
