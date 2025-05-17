@@ -7,6 +7,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.koushik.firstproject.model.Character;
+import com.koushik.firstproject.model.PublicStatus;
 import com.koushik.firstproject.config.appLogger.AppLogger;
 import com.koushik.firstproject.dto.CharacterDTO;
 import com.koushik.firstproject.dto.CharacterImageDTO;
@@ -15,6 +16,7 @@ import com.koushik.firstproject.entity.UserEntry;
 import com.koushik.firstproject.repositary.CharacterRepo;
 import com.koushik.firstproject.services.CharacterService;
 import com.koushik.firstproject.utill.JwtUtill;
+import com.koushik.firstproject.dto.PublicStatusDTO;  // Adjust package name accordingly
 
 import org.springframework.beans.factory.annotation.Value;
 
@@ -31,9 +33,12 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 import com.koushik.firstproject.dto.CharacterSecondDto;
+import com.koushik.firstproject.repositary.PublicStatusRepository;
 
 @Service
 public class CharacterServiceImpl implements CharacterService {
+        @Autowired
+        private PublicStatusRepository publicStatusRepository;
         @Autowired
         private CharacterRepo characterRepo;
         @Autowired
@@ -67,7 +72,8 @@ public class CharacterServiceImpl implements CharacterService {
             
             // Get the current date-time
             LocalDateTime now = LocalDateTime.now();
-            
+            PublicStatus defaultStatus = publicStatusRepository.findTopByOrderByIdAsc()
+    .orElseThrow(() -> new RuntimeException("No PublicStatus found"));
             // Format the date-time to a readable string (e.g., "yyyyMMdd_HHmmss")
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
             String formattedDateTime = now.format(formatter);
@@ -77,6 +83,7 @@ public class CharacterServiceImpl implements CharacterService {
             character.setBackgroundStory(dto.getBackgroundStory());
             character.setUserId(userId);
             character.setCharacterUniqeId(formattedDateTime);
+            character.setPublicStatus(defaultStatus);
             return characterRepo.save(character);
         }
         @Override
@@ -138,39 +145,56 @@ public class CharacterServiceImpl implements CharacterService {
             return dto; // ✅ Correct return
         }
         @Override
-       public List<CharacterListDTO> listCharacterAll() {
-       List<Character> characters = characterRepo.findByIsActiveAndIsPublishAndIsCompletedAndIsDeleted(1,1,1,0);
-
-        if (characters.isEmpty()) {
-            throw new RuntimeException("No characters found");
+        public List<CharacterListDTO> listCharacterAll() {
+            List<Character> characters = characterRepo.findByIsActiveAndIsPublishAndIsCompletedAndIsDeleted(1, 1, 1, 0);
+        
+            if (characters.isEmpty()) {
+                throw new RuntimeException("No characters found");
+            }
+        
+            return characters.stream().map(character -> {
+                // Use nested static class reference
+                CharacterListDTO.PublicStatusDTO publicStatusDTO = null;
+        
+                if (character.getPublicStatus() != null) {
+                    var publicStatus = character.getPublicStatus();
+        
+                    publicStatusDTO = CharacterListDTO.PublicStatusDTO.builder()
+                        .id(publicStatus.getId())
+                        .name(publicStatus.getName())
+                        .shortName(publicStatus.getShortName())
+                        .createdAt(publicStatus.getCreatedAt())
+                        .updatedAt(publicStatus.getUpdatedAt())
+                        .build();
+                }
+        
+                return CharacterListDTO.builder()
+                    .id(character.getId())
+                    .responseDerective(character.getResponseDerective())
+                    .keyMemory(character.getKeyMemory())
+                    .exampleMessage(character.getExampleMessage())
+                    .videoUrl(character.getVideoUrl())
+                    .userId(character.getUserId())
+                    .characterUniqeId(character.getCharacterUniqeId())
+                    .characterName(character.getCharacterName())
+                    .dob(character.getDob())
+                    .gender(character.getGender())
+                    .avatar(character.getAvatar() != null ? baseUrl + character.getAvatar() : null)
+                    .backgroundStory(character.getBackgroundStory())
+                    .characterGreeting(character.getCharacterGreeting())
+                    .parentId(character.getParentId())
+                    .isActive(character.getIsActive())
+                    .isPublic(character.getIsPublic())
+                    .isPublish(character.getIsPublish())
+                    .type(character.getType())
+                    .isCompleted(character.getIsCompleted())
+                    .isDeleted(character.getIsDeleted())
+                    .createdAt(character.getCreatedAt())
+                    .updatedAt(character.getUpdatedAt())
+                    .publicStatus(publicStatusDTO)  // use nested static class instance here
+                    .build();
+            }).collect(Collectors.toList());
         }
-
-        return characters.stream().map(character -> CharacterListDTO.builder()
-                .id(character.getId())
-                .responseDerective(character.getResponseDerective())
-                .keyMemory(character.getKeyMemory())
-                .exampleMessage(character.getExampleMessage())
-                .videoUrl(character.getVideoUrl())
-                .userId(character.getUserId())
-                .characterUniqeId(character.getCharacterUniqeId())
-                .characterName(character.getCharacterName())
-                .dob(character.getDob())
-                .gender(character.getGender())
-                .avatar(character.getAvatar() != null ? baseUrl + character.getAvatar() : null)
-    // prepend base URL
-                .backgroundStory(character.getBackgroundStory())
-                .characterGreeting(character.getCharacterGreeting())
-                .parentId(character.getParentId())
-                .isActive(character.getIsActive())
-                .isPublic(character.getIsPublic())
-                .isPublish(character.getIsPublish())
-                .type(character.getType())
-                .isCompleted(character.getIsCompleted())
-                .isDeleted(character.getIsDeleted())
-                .createdAt(character.getCreatedAt())
-                .updatedAt(character.getUpdatedAt())
-                .build())
-            .collect(Collectors.toList());
-    }
+        
 
 }

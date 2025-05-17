@@ -79,6 +79,8 @@ public class Character {
     private LocalDateTime updatedAt = LocalDateTime.now();
 
     // Relationships
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "public_status_id", nullable = false) // FK column
+    private PublicStatus publicStatus;
    
 }

@@ -29,4 +29,6 @@ public class PublicStatus {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt = LocalDateTime.now();
+    @OneToMany(mappedBy = "publicStatus", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Character> characters;
 }

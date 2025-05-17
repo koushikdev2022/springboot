@@ -32,5 +32,17 @@ public class CharacterListDTO {
     private Integer isDeleted;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-  
+    private PublicStatusDTO publicStatus;
+    
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class PublicStatusDTO {
+        private Long id;
+        private String name;
+        private String shortName;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
+    }
 }
