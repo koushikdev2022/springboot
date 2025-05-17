@@ -1,12 +1,14 @@
 package com.koushik.firstproject.api.controller.character;
 
 import java.util.Map;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -121,6 +123,18 @@ public class CharacterController {
             "message", "character insert successfully",
             "status_code", 200,
             "listCharacter",listCharacter
+           
+          ));
+       }
+       @GetMapping("/image-list-all")
+       public ResponseEntity<?> getListAll(){
+        
+        List<CharacterListDTO> listCharacter = characterServiceImpl.listCharacterAll();
+        return ResponseEntity.status(200).body(Map.of(
+            "status", true,
+            "message", "character insert successfully",
+            "status_code", 200,
+           "listCharacter",listCharacter
            
           ));
        }

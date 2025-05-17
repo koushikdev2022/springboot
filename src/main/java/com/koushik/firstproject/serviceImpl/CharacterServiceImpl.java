@@ -15,7 +15,9 @@ import com.koushik.firstproject.entity.UserEntry;
 import com.koushik.firstproject.repositary.CharacterRepo;
 import com.koushik.firstproject.services.CharacterService;
 import com.koushik.firstproject.utill.JwtUtill;
+
 import org.springframework.beans.factory.annotation.Value;
+
 import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.security.core.Authentication;
@@ -23,8 +25,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import com.koushik.firstproject.dto.CharacterSecondDto;
 
@@ -133,5 +137,40 @@ public class CharacterServiceImpl implements CharacterService {
 
             return dto; // ✅ Correct return
         }
+        @Override
+       public List<CharacterListDTO> listCharacterAll() {
+       List<Character> characters = characterRepo.findByIsActiveAndIsPublishAndIsCompletedAndIsDeleted(1,1,1,0);
+
+        if (characters.isEmpty()) {
+            throw new RuntimeException("No characters found");
+        }
+
+        return characters.stream().map(character -> CharacterListDTO.builder()
+                .id(character.getId())
+                .responseDerective(character.getResponseDerective())
+                .keyMemory(character.getKeyMemory())
+                .exampleMessage(character.getExampleMessage())
+                .videoUrl(character.getVideoUrl())
+                .userId(character.getUserId())
+                .characterUniqeId(character.getCharacterUniqeId())
+                .characterName(character.getCharacterName())
+                .dob(character.getDob())
+                .gender(character.getGender())
+                .avatar(character.getAvatar() != null ? baseUrl + character.getAvatar() : null)
+    // prepend base URL
+                .backgroundStory(character.getBackgroundStory())
+                .characterGreeting(character.getCharacterGreeting())
+                .parentId(character.getParentId())
+                .isActive(character.getIsActive())
+                .isPublic(character.getIsPublic())
+                .isPublish(character.getIsPublish())
+                .type(character.getType())
+                .isCompleted(character.getIsCompleted())
+                .isDeleted(character.getIsDeleted())
+                .createdAt(character.getCreatedAt())
+                .updatedAt(character.getUpdatedAt())
+                .build())
+            .collect(Collectors.toList());
+    }
 
 }

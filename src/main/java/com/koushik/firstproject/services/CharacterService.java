@@ -1,5 +1,7 @@
 package com.koushik.firstproject.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,5 +17,6 @@ public interface CharacterService {
     Character secondAddCharacter(Long id,CharacterSecondDto characterSecondDTO);
     Character imageAddCharacter(Long id,CharacterImageDTO characterImageDTO);
     CharacterListDTO listCharacter(Long id);
+    List<CharacterListDTO> listCharacterAll();
 }
 
