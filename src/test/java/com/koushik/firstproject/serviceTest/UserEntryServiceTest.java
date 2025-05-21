@@ -24,13 +24,13 @@ public class UserEntryServiceTest {
  
     }
 
-    @ParameterizedTest
-    @CsvSource({
-        "1,1,2",
-        "2,2,6",
-        "3,3,13"
-    })
-    public void test(int a,int b, int exp){
-        assertEquals(exp, a+b);
-    }
+    // @ParameterizedTest
+    // @CsvSource({
+    //     "1,1,2",
+    //     "2,2,6",
+    //     "3,3,13"
+    // })
+    // public void test(int a,int b, int exp){
+    //     assertEquals(exp, a+b);
+    // }
 }
